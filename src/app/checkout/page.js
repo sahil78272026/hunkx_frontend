@@ -10,6 +10,24 @@ export default function CheckoutPage() {
 
   const [formData, setFormData] = useState({ name: '', mobile: '', address: '', pincode: '' });
 
+  const handleMobileChange = (e) => {
+    let val = e.target.value.replace(/\D/g, ''); // Remove non-digits
+    
+    // Automatically strip leading zero if user pastes an 11-digit number starting with 0
+    if (val.length > 10 && val.startsWith('0')) {
+      val = val.substring(1);
+    }
+    // Also handle trailing zero bug just in case they added one by mistake at the end of 10 digits
+    else if (val.length > 10 && val.endsWith('0')) {
+      val = val.substring(0, 10);
+    }
+    
+    // Limit to 10 digits maximum anyway
+    if (val.length > 10) val = val.substring(0, 10);
+    
+    setFormData({...formData, mobile: val});
+  };
+
   const handlePay = async (e) => {
     e.preventDefault();
     if(cartItems.length === 0) return;
@@ -104,7 +122,7 @@ export default function CheckoutPage() {
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', color: 'var(--gold)' }}>Mobile Number</label>
-            <input required pattern="[0-9]{10}" title="10 digit mobile number" placeholder="9876543210" type="tel" onChange={e=>setFormData({...formData, mobile: e.target.value})} style={{ width: '100%', padding: '15px', background: 'var(--black-soft)', border: '1px solid rgba(212,162,58,0.3)', color: 'white', fontFamily: 'Inter' }} />
+            <input required pattern="[0-9]{10}" title="10 digit mobile number" placeholder="9876543210" type="tel" value={formData.mobile} onChange={handleMobileChange} style={{ width: '100%', padding: '15px', background: 'var(--black-soft)', border: '1px solid rgba(212,162,58,0.3)', color: 'white', fontFamily: 'Inter' }} />
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', color: 'var(--gold)' }}>Delivery Address</label>
