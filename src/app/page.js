@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const sectionsRef = useRef([]);
@@ -90,7 +91,7 @@ export default function Home() {
           <h2 className="section-title">Crafted in <span>drops</span>.</h2>
         </div>
         <div className="collection-grid">
-          <div className="collection-card card-1">
+          <Link href="/shop" className="collection-card card-1" style={{ textDecoration: 'none' }}>
             <div className="card-bg"></div>
             <div className="card-content">
               <div className="card-tag">Signature</div>
@@ -98,8 +99,8 @@ export default function Home() {
               <div className="card-desc">Bleached. Rugged. Unapologetic.</div>
               <div className="card-link">Explore →</div>
             </div>
-          </div>
-          <div className="collection-card card-2">
+          </Link>
+          <Link href="/shop" className="collection-card card-2" style={{ textDecoration: 'none' }}>
             <div className="card-bg"></div>
             <div className="card-content">
               <div className="card-tag">New Year</div>
@@ -107,8 +108,8 @@ export default function Home() {
               <div className="card-desc">A fresh start, sharply dressed.</div>
               <div className="card-link">Explore →</div>
             </div>
-          </div>
-          <div className="collection-card card-3">
+          </Link>
+          <Link href="/shop" className="collection-card card-3" style={{ textDecoration: 'none' }}>
             <div className="card-bg"></div>
             <div className="card-content">
               <div className="card-tag">Street</div>
@@ -116,7 +117,7 @@ export default function Home() {
               <div className="card-desc">Built for the daily flex.</div>
               <div className="card-link">Explore →</div>
             </div>
-          </div>
+          </Link>
         </div>
       </section>
 

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function TrackOrderPage() {
   const [orderId, setOrderId] = useState("");
@@ -32,8 +33,13 @@ export default function TrackOrderPage() {
     }
   };
 
+  const router = useRouter();
+
   return (
-    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px' }}>
+    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px', paddingLeft: '5%', paddingRight: '5%' }}>
+      <button onClick={() => router.back()} style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer', marginBottom: '30px', fontSize: '1rem', fontFamily: 'Cinzel, serif' }}>
+        ← Back
+      </button>
       <section style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
         <h1 className="section-title" style={{ marginBottom: '40px' }}>Track <span>Order</span></h1>
         

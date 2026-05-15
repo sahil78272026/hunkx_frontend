@@ -8,6 +8,10 @@ export default function SuccessPage() {
   const [order, setOrder] = useState(null);
 
   useEffect(() => {
+    // Manually remove any scroll locks applied by Razorpay's modal just in case it didn't clean up
+    document.body.style.overflow = 'auto';
+    document.body.style.position = 'static';
+    
     // Read the pending order we saved in checkout
     const savedOrder = localStorage.getItem("hunkx_pending_order");
     if (savedOrder) {

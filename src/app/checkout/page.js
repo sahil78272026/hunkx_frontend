@@ -1,14 +1,35 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 
 export default function CheckoutPage() {
   const { cartItems, totalPrice, isLoaded } = useCart();
+  const { user, session, loading: authLoading, openAuthModal } = useAuth();
   const router = useRouter();
 
-  const [formData, setFormData] = useState({ name: '', mobile: '', address: '', pincode: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', mobile: '', address: '', pincode: '' });
+
+  // Pre-fill email and name if available
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        email: user.email || '',
+        name: user.user_metadata?.full_name || ''
+      }));
+    }
+  }, [user]);
+
+  // Protect route
+  useEffect(() => {
+    if (!authLoading && !user) {
+      openAuthModal();
+      router.push('/cart');
+    }
+  }, [user, authLoading, router, openAuthModal]);
 
   const handleMobileChange = (e) => {
     let val = e.target.value.replace(/\D/g, ''); // Remove non-digits
@@ -43,9 +64,13 @@ export default function CheckoutPage() {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       const response = await fetch(`${API_URL}/api/v1/orders/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": session ? `Bearer ${session.access_token}` : ""
+        },
         body: JSON.stringify({
           customer_name: formData.name,
+          customer_email: formData.email,
           customer_mobile: formData.mobile,
           customer_address: formData.address,
           customer_pincode: formData.pincode,
@@ -105,20 +130,28 @@ export default function CheckoutPage() {
     }
   };
 
-  if (!isLoaded) return null;
+  if (!isLoaded || authLoading || !user) return null;
 
   return (
-    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px' }}>
+    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px', paddingLeft: '5%', paddingRight: '5%' }}>
       {/* Load Razorpay Script securely via Next.js */}
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       
+      <button onClick={() => router.back()} style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer', marginBottom: '30px', fontSize: '1rem', fontFamily: 'Cinzel, serif' }}>
+        ← Back
+      </button>
+
       <section style={{ maxWidth: '800px', margin: '0 auto' }}>
         <h1 className="section-title" style={{ textAlign: 'center', marginBottom: '40px' }}>Secure <span>Checkout</span></h1>
         
         <form onSubmit={handlePay} style={{ display: 'grid', gap: '20px' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', color: 'var(--gold)' }}>Full Name</label>
-            <input required type="text" placeholder="John Doe" onChange={e=>setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '15px', background: 'var(--black-soft)', border: '1px solid rgba(212,162,58,0.3)', color: 'white', fontFamily: 'Inter' }} />
+            <input required type="text" placeholder="John Doe" value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '15px', background: 'var(--black-soft)', border: '1px solid rgba(212,162,58,0.3)', color: 'white', fontFamily: 'Inter' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--gold)' }}>Email Address</label>
+            <input required type="email" placeholder="you@example.com" value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} style={{ width: '100%', padding: '15px', background: 'var(--black-soft)', border: '1px solid rgba(212,162,58,0.3)', color: 'white', fontFamily: 'Inter' }} />
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '8px', color: 'var(--gold)' }}>Mobile Number</label>

@@ -2,7 +2,9 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BackgroundElements from "@/components/BackgroundElements";
+import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
+import AuthModal from "@/components/AuthModal";
 
 export const metadata = {
   title: "HUNKX — Drip Hard. Dress Sharp.",
@@ -19,11 +21,14 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <BackgroundElements />
-        <CartProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Navbar />
+            <AuthModal />
+            {children}
+            <Footer />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

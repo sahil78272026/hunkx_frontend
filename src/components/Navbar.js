@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const { totalItems, isLoaded } = useCart();
+  const { user, openAuthModal, signOut, loading } = useAuth();
 
   return (
     <nav>
@@ -17,7 +19,23 @@ export default function Navbar() {
         <Link href="/cart" style={{ color: 'var(--cream)', textDecoration: 'none', fontSize: '0.85rem', letterSpacing: '0.1em' }}>
           Cart {isLoaded && totalItems > 0 && `(${totalItems})`}
         </Link>
-        <a href="tel:+917669933665" className="nav-cta">Call Store</a>
+        
+        {!loading && (
+          user ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Link href="/profile" style={{ color: 'var(--gold)', fontSize: '0.9rem', textDecoration: 'none', cursor: 'pointer' }}>
+                Hi, {user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0]}
+              </Link>
+              <button onClick={signOut} className="nav-cta" style={{ background: 'transparent', border: '1px solid var(--gold)', cursor: 'pointer', padding: '0.5rem 1rem' }}>
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button onClick={openAuthModal} className="nav-cta" style={{ background: 'transparent', border: '1px solid var(--gold)', cursor: 'pointer', padding: '0.5rem 1rem' }}>
+              Login
+            </button>
+          )
+        )}
       </div>
     </nav>
   );

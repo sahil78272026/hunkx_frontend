@@ -26,8 +26,11 @@ export default function ProductDetailPage({ params }) {
   };
 
   return (
-    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px' }}>
-      <section style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px' }}>
+    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px', paddingLeft: '5%', paddingRight: '5%' }}>
+      <button onClick={() => router.back()} style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer', marginBottom: '30px', fontSize: '1rem', fontFamily: 'Cinzel, serif' }}>
+        ← Back
+      </button>
+      <section className="product-detail-grid">
         
         {/* Image side */}
         <div style={{ aspectRatio: '3/4', background: `url(${product.images[0]}) center/cover`, border: '1px solid var(--gold)' }}>

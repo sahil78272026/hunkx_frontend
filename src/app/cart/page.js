@@ -2,15 +2,20 @@
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function CartPage() {
   const { cartItems, removeFromCart, updateQuantity, totalPrice, isLoaded } = useCart();
+  const { user, openAuthModal } = useAuth();
   const router = useRouter();
 
   if (!isLoaded) return <div style={{ paddingTop: '150px', textAlign: 'center' }}>Loading cart...</div>;
 
   return (
-    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px' }}>
+    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px', paddingLeft: '5%', paddingRight: '5%' }}>
+      <button onClick={() => router.back()} style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer', marginBottom: '30px', fontSize: '1rem', fontFamily: 'Cinzel, serif' }}>
+        ← Back
+      </button>
       <section style={{ maxWidth: '1000px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '50px' }}>
           <span className="section-label">Your Bag</span>
@@ -73,7 +78,13 @@ export default function CartPage() {
                   <span>₹{totalPrice}</span>
                 </div>
                 <button 
-                  onClick={() => router.push('/checkout')} 
+                  onClick={() => {
+                    if (!user) {
+                      openAuthModal();
+                    } else {
+                      router.push('/checkout');
+                    }
+                  }} 
                   className="btn-primary" 
                   style={{ width: '100%' }}
                 >
