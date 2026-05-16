@@ -26,6 +26,11 @@ export default function Navbar() {
               <Link href="/profile" style={{ color: 'var(--gold)', fontSize: '0.9rem', textDecoration: 'none', cursor: 'pointer' }}>
                 Hi, {user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0]}
               </Link>
+              {user.email === 'sahilg045@gmail.com' && (
+                <Link href="/admin" style={{ color: '#ff4444', fontSize: '0.9rem', textDecoration: 'none', cursor: 'pointer' }}>
+                  Admin
+                </Link>
+              )}
               <button onClick={signOut} className="nav-cta" style={{ background: 'transparent', border: '1px solid var(--gold)', cursor: 'pointer', padding: '0.5rem 1rem' }}>
                 Logout
               </button>

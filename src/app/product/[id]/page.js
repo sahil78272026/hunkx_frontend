@@ -1,19 +1,36 @@
 "use client";
-import { useState, use } from "react";
-import { products } from "@/data/products";
+import { useState, useEffect, use } from "react";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function ProductDetailPage({ params }) {
   const router = useRouter();
-  // React 19 / Next 15 pattern for unrolling promises
   const resolvedParams = use(params);
-  const product = products.find(p => p.id === resolvedParams.id);
   
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState("");
   const { addToCart } = useCart();
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        const res = await fetch(`${API_URL}/api/v1/products/${resolvedParams.id}`);
+        if (!res.ok) throw new Error("Product not found");
+        const data = await res.json();
+        setProduct(data);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [resolvedParams.id]);
+
+  if (loading) return <div style={{ paddingTop: '150px', textAlign: 'center', color: 'var(--gold)' }}>Loading Product...</div>;
   if (!product) return <div style={{ paddingTop: '150px', textAlign: 'center' }}>Product not found</div>;
 
   const handleAddToCart = () => {
