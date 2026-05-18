@@ -10,6 +10,11 @@ export default function ProfilePage() {
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [error, setError] = useState(null);
 
+  const [showRefundModal, setShowRefundModal] = useState(false);
+  const [refundReason, setRefundReason] = useState("");
+  const [requestingRefund, setRequestingRefund] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+
   // Protect route
   useEffect(() => {
     if (!authLoading && !user) {
@@ -40,6 +45,35 @@ export default function ProfilePage() {
       fetchOrders();
     }
   }, [user, session]);
+
+  const handleRequestRefund = async (e) => {
+    e.preventDefault();
+    if (!refundReason.trim() || !selectedOrderId) return;
+    
+    setRequestingRefund(true);
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const res = await fetch(`${API_URL}/api/v1/orders/${selectedOrderId}/request-refund`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: refundReason })
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Failed to request refund");
+      
+      // Update orders list
+      setOrders(orders.map(o => o.id === selectedOrderId ? data : o));
+      setShowRefundModal(false);
+      setRefundReason("");
+      setSelectedOrderId(null);
+      alert("Refund request submitted successfully!");
+    } catch (err) {
+      alert("Error: " + err.message);
+    } finally {
+      setRequestingRefund(false);
+    }
+  };
 
   if (authLoading || (!user && !authLoading)) return <div style={{ paddingTop: '150px', textAlign: 'center' }}>Loading profile...</div>;
 
@@ -81,14 +115,75 @@ export default function ProfilePage() {
                     </div>
                   ))}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '15px', paddingTop: '10px', borderTop: '1px solid rgba(212,162,58,0.3)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px', paddingTop: '10px', borderTop: '1px solid rgba(212,162,58,0.3)' }}>
+                  {!order.refund_rejection_reason && ['PAID', 'PACKED', 'SHIPPED', 'DELIVERED'].includes(order.status) ? (
+                    <button 
+                      onClick={() => { setSelectedOrderId(order.id); setShowRefundModal(true); }}
+                      style={{ background: 'transparent', border: '1px solid var(--gold)', color: 'var(--gold)', padding: '5px 15px', cursor: 'pointer', borderRadius: '4px', fontSize: '0.9rem' }}
+                    >
+                      Request Cancellation / Refund
+                    </button>
+                  ) : (
+                    <div></div>
+                  )}
                   <span style={{ fontWeight: 'bold', color: 'var(--gold-bright)' }}>Total: ₹{order.total_amount}</span>
                 </div>
+                
+                {order.status === "REFUND_REQUESTED" && (
+                  <div style={{ marginTop: '15px', padding: '10px', background: 'rgba(255,152,0,0.1)', border: '1px dashed #ff9800' }}>
+                    <p style={{ color: '#ff9800', fontSize: '0.9rem', margin: 0 }}>Refund requested. Reason: {order.refund_reason}</p>
+                  </div>
+                )}
+                
+                {order.refund_rejection_reason && (
+                  <div style={{ marginTop: '15px', padding: '10px', background: 'rgba(255,0,0,0.1)', border: '1px dashed #ff4444' }}>
+                    <p style={{ color: '#ff4444', fontSize: '0.9rem', margin: 0 }}>Refund request declined by Admin. Reason: {order.refund_rejection_reason}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         )}
       </section>
+
+      {/* Request Refund Modal */}
+      {showRefundModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '20px'
+        }}>
+          <div style={{
+            background: 'var(--black-soft)', padding: '30px', border: '1px solid var(--gold)',
+            borderRadius: '8px', maxWidth: '500px', width: '100%', position: 'relative'
+          }}>
+            <button 
+              onClick={() => { setShowRefundModal(false); setSelectedOrderId(null); }}
+              style={{ position: 'absolute', top: '15px', right: '15px', background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', fontSize: '1.2rem' }}
+            >
+              ✕
+            </button>
+            <h2 style={{ fontFamily: 'Cinzel', color: 'var(--gold-bright)', marginBottom: '20px', textAlign: 'center' }}>Request Refund</h2>
+            <p style={{ color: 'rgba(255,255,255,0.8)', marginBottom: '20px' }}>
+              Please let us know why you want to cancel or return this order. Our admin will review and process your request.
+            </p>
+            
+            <form onSubmit={handleRequestRefund}>
+              <textarea 
+                required 
+                rows="4" 
+                placeholder="Enter your reason here..." 
+                value={refundReason}
+                onChange={e => setRefundReason(e.target.value)}
+                style={{ width: '100%', padding: '15px', background: '#0a0805', border: '1px solid rgba(212,162,58,0.5)', color: 'white', outline: 'none', resize: 'vertical', marginBottom: '20px', fontFamily: 'Inter' }}
+              />
+              
+              <button disabled={requestingRefund} type="submit" className="btn-primary" style={{ width: '100%', padding: '15px', fontSize: '1.1rem', opacity: requestingRefund ? 0.7 : 1 }}>
+                {requestingRefund ? "Submitting..." : "Submit Request"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -9,15 +9,21 @@ export default function AdminDashboard() {
   const router = useRouter();
   
   const [stats, setStats] = useState(null);
+  const [analyticsData, setAnalyticsData] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Advanced Order Filters
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
   
   // Custom confirmation modal state
   const [confirmPopup, setConfirmPopup] = useState({ isOpen: false, orderId: null, newStatus: null, currentStatus: null });
   
   // Order history details modal state
   const [orderDetailsPopup, setOrderDetailsPopup] = useState({ isOpen: false, order: null });
+  const [refundLoading, setRefundLoading] = useState(false);
 
   // Products state
   const [activeTab, setActiveTab] = useState('orders'); // 'orders' or 'products'
@@ -85,6 +91,14 @@ export default function AdminDashboard() {
         const productsData = await productsRes.json();
         setAdminProducts(productsData);
       }
+      
+      const analyticsRes = await fetch(`${API_URL}/api/v1/admin/analytics`, {
+        headers: { "Authorization": `Bearer ${session.access_token}` }
+      });
+      if (analyticsRes.ok) {
+        const aData = await analyticsRes.json();
+        setAnalyticsData(aData);
+      }
 
     } catch (err) {
       setError(err.message);
@@ -110,6 +124,61 @@ export default function AdminDashboard() {
       fetchAdminData();
     } catch (err) {
       alert(err.message);
+    }
+  };
+
+  const handleRefundOrder = async (orderId) => {
+    if (!confirm("Are you sure you want to refund this order? This will process a full refund via Razorpay and return items to inventory.")) return;
+    
+    try {
+      setRefundLoading(true);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const res = await fetch(`${API_URL}/api/v1/admin/orders/${orderId}/refund`, {
+        method: "POST",
+        headers: { 
+          "Authorization": `Bearer ${session.access_token}` 
+        }
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Failed to process refund");
+      
+      alert("Refund processed successfully!");
+      setOrderDetailsPopup({ isOpen: false, order: null });
+      fetchAdminData();
+    } catch (err) {
+      alert("Refund Error: " + err.message);
+    } finally {
+      setRefundLoading(false);
+    }
+  };
+
+  const handleRejectRefund = async (orderId) => {
+    const reason = window.prompt("Enter the reason for rejecting this refund request:");
+    if (!reason || !reason.trim()) return;
+    
+    try {
+      setRefundLoading(true);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const res = await fetch(`${API_URL}/api/v1/admin/orders/${orderId}/reject-refund`, {
+        method: "POST",
+        headers: { 
+          "Authorization": `Bearer ${session.access_token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ reason: reason.trim() })
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Failed to reject refund");
+      
+      alert("Refund request rejected successfully!");
+      setOrderDetailsPopup({ isOpen: false, order: null });
+      fetchAdminData();
+    } catch (err) {
+      alert("Error: " + err.message);
+    } finally {
+      setRefundLoading(false);
     }
   };
 
@@ -236,6 +305,17 @@ export default function AdminDashboard() {
     }
   };
 
+  const filteredOrders = orders.filter(order => {
+    const term = searchTerm.toLowerCase();
+    const matchesSearch = (order.id || "").toLowerCase().includes(term) ||
+                          (order.customer_mobile || "").includes(term) ||
+                          (order.customer_name || "").toLowerCase().includes(term);
+    
+    const matchesStatus = statusFilter === "ALL" || order.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+
   if (authLoading || (!user && !authLoading)) return <div style={{ paddingTop: '150px', textAlign: 'center' }}>Loading admin dashboard...</div>;
 
   return (
@@ -293,10 +373,133 @@ export default function AdminDashboard() {
               >
                 Product Management
               </button>
+              <button 
+                onClick={() => setActiveTab('analytics')}
+                style={{ 
+                  background: 'transparent', border: 'none', padding: '10px 20px', cursor: 'pointer',
+                  color: activeTab === 'analytics' ? 'var(--gold-bright)' : '#888',
+                  borderBottom: activeTab === 'analytics' ? '2px solid var(--gold)' : '2px solid transparent',
+                  fontFamily: 'Cinzel, serif', fontSize: '1.2rem'
+                }}
+              >
+                Analytics
+              </button>
             </div>
 
-            {activeTab === 'orders' ? (
+            {activeTab === 'analytics' && analyticsData && (
+              <div>
+                <h2 style={{ fontFamily: 'Cinzel', color: 'var(--gold)', marginBottom: '20px' }}>Key Performance Indicators</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+                  <div style={{ background: 'var(--black-soft)', padding: '20px', border: '1px solid var(--gold)' }}>
+                    <p style={{ color: '#aaa', fontSize: '0.9rem' }}>Gross Revenue</p>
+                    <h3 style={{ fontSize: '1.8rem', color: 'var(--gold-bright)' }}>₹{analyticsData.kpis.gross_revenue}</h3>
+                  </div>
+                  <div style={{ background: 'var(--black-soft)', padding: '20px', border: '1px solid var(--gold)' }}>
+                    <p style={{ color: '#aaa', fontSize: '0.9rem' }}>Average Order Value</p>
+                    <h3 style={{ fontSize: '1.8rem', color: 'var(--gold-bright)' }}>₹{analyticsData.kpis.aov}</h3>
+                  </div>
+                  <div style={{ background: 'var(--black-soft)', padding: '20px', border: '1px solid var(--gold)' }}>
+                    <p style={{ color: '#aaa', fontSize: '0.9rem' }}>Total Units Sold</p>
+                    <h3 style={{ fontSize: '1.8rem', color: 'var(--gold-bright)' }}>{analyticsData.kpis.total_units_sold}</h3>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', marginBottom: '40px' }}>
+                  <div>
+                    <h2 style={{ fontFamily: 'Cinzel', color: 'var(--gold)', marginBottom: '20px' }}>Sales Funnel</h2>
+                    <div style={{ background: 'var(--black-soft)', padding: '20px', border: '1px solid rgba(212,162,58,0.3)' }}>
+                      <div style={{ marginBottom: '15px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                          <span>Checkout Initiated</span><span>{analyticsData.funnel.checkout_initiated}</span>
+                        </div>
+                        <div style={{ background: '#222', height: '10px', width: '100%' }}><div style={{ background: 'var(--gold)', height: '100%', width: '100%' }}></div></div>
+                      </div>
+                      <div style={{ marginBottom: '15px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                          <span>Payment Success</span><span>{analyticsData.funnel.payment_success}</span>
+                        </div>
+                        <div style={{ background: '#222', height: '10px', width: '100%' }}><div style={{ background: '#4caf50', height: '100%', width: `${analyticsData.funnel.checkout_initiated ? (analyticsData.funnel.payment_success / analyticsData.funnel.checkout_initiated) * 100 : 0}%` }}></div></div>
+                      </div>
+                      <div style={{ marginBottom: '15px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                          <span>Shipped/Delivered</span><span>{analyticsData.funnel.shipped_or_delivered}</span>
+                        </div>
+                        <div style={{ background: '#222', height: '10px', width: '100%' }}><div style={{ background: '#2196f3', height: '100%', width: `${analyticsData.funnel.payment_success ? (analyticsData.funnel.shipped_or_delivered / analyticsData.funnel.payment_success) * 100 : 0}%` }}></div></div>
+                      </div>
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                          <span>Refunded/Cancelled</span><span>{analyticsData.funnel.refunded_or_cancelled}</span>
+                        </div>
+                        <div style={{ background: '#222', height: '10px', width: '100%' }}><div style={{ background: '#f44336', height: '100%', width: `${analyticsData.funnel.checkout_initiated ? (analyticsData.funnel.refunded_or_cancelled / analyticsData.funnel.checkout_initiated) * 100 : 0}%` }}></div></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h2 style={{ fontFamily: 'Cinzel', color: 'var(--gold)', marginBottom: '20px' }}>Top 5 Products</h2>
+                    <div style={{ background: 'var(--black-soft)', padding: '20px', border: '1px solid rgba(212,162,58,0.3)' }}>
+                      {analyticsData.top_products.map((prod, idx) => (
+                        <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                          <span>{idx+1}. {prod.name}</span>
+                          <span style={{ color: 'var(--gold)' }}>{prod.quantity} units (₹{prod.revenue})</span>
+                        </div>
+                      ))}
+                      {analyticsData.top_products.length === 0 && <p style={{ color: '#888' }}>No data yet.</p>}
+                    </div>
+                  </div>
+                </div>
+                
+                <h2 style={{ fontFamily: 'Cinzel', color: 'var(--gold)', marginBottom: '20px' }}>7-Day Revenue Trend</h2>
+                <div style={{ background: 'var(--black-soft)', padding: '30px', border: '1px solid rgba(212,162,58,0.3)', height: '300px', display: 'flex', alignItems: 'flex-end', gap: '10px', overflowX: 'auto', paddingTop: '60px' }}>
+                  {analyticsData.trend_data.map((day, idx) => {
+                    const maxRevenue = Math.max(...analyticsData.trend_data.map(d => d.revenue), 1);
+                    const heightPercent = (day.revenue / maxRevenue) * 100;
+                    return (
+                      <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', height: '100%', minWidth: '40px' }}>
+                        <div style={{ color: 'var(--gold-bright)', fontSize: '0.8rem', marginBottom: '10px', whiteSpace: 'nowrap' }}>₹{day.revenue}</div>
+                        <div style={{ width: '100%', background: 'var(--gold)', height: `${heightPercent}%`, minHeight: '1px', transition: 'height 0.5s ease' }}></div>
+                        <div style={{ marginTop: '10px', fontSize: '0.7rem', color: '#aaa' }}>{day.date.substring(5)}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'orders' && (
               <div style={{ overflowX: 'auto' }}>
+                {/* Advanced Filters */}
+                <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'center', background: 'var(--black-soft)', padding: '20px', border: '1px solid rgba(212,162,58,0.3)' }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: 'block', marginBottom: '5px', color: 'var(--gold)' }}>Search Orders</label>
+                    <input 
+                      type="text" 
+                      placeholder="Search by ID, Mobile, or Name..." 
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      style={{ width: '100%', padding: '10px', background: 'var(--pitch-black)', border: '1px solid var(--gold)', color: 'white', outline: 'none' }}
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: 'block', marginBottom: '5px', color: 'var(--gold)' }}>Filter by Status</label>
+                    <select 
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      style={{ width: '100%', padding: '10px', background: 'var(--pitch-black)', border: '1px solid var(--gold)', color: 'white', outline: 'none' }}
+                    >
+                      <option value="ALL" style={{ background: '#0a0805', color: '#fff' }}>All Statuses</option>
+                      <option value="CREATED" style={{ background: '#0a0805', color: '#fff' }}>Created</option>
+                      <option value="PAID" style={{ background: '#0a0805', color: '#fff' }}>Paid</option>
+                      <option value="PACKED" style={{ background: '#0a0805', color: '#fff' }}>Packed</option>
+                      <option value="SHIPPED" style={{ background: '#0a0805', color: '#fff' }}>Shipped</option>
+                      <option value="DELIVERED" style={{ background: '#0a0805', color: '#fff' }}>Delivered</option>
+                      <option value="REFUND_REQUESTED" style={{ background: '#0a0805', color: '#fff' }}>Refund Requested</option>
+                      <option value="REFUNDED" style={{ background: '#0a0805', color: '#fff' }}>Refunded</option>
+                      <option value="CANCELLED" style={{ background: '#0a0805', color: '#fff' }}>Cancelled</option>
+                    </select>
+                  </div>
+                </div>
+
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
                   <thead>
                     <tr style={{ background: 'var(--black-soft)', borderBottom: '1px solid var(--gold)' }}>
@@ -309,7 +512,7 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {orders.map(order => (
+                    {filteredOrders.length > 0 ? filteredOrders.map(order => (
                       <tr key={order.id} style={{ borderBottom: '1px solid rgba(212,162,58,0.2)' }}>
                         <td style={{ padding: '15px' }}>
                           <button 
@@ -334,8 +537,8 @@ export default function AdminDashboard() {
                         <td style={{ padding: '15px' }}>
                           <span style={{ 
                             padding: '5px 10px', 
-                            background: order.status === 'DELIVERED' ? 'rgba(0,255,0,0.1)' : 'rgba(212,162,58,0.1)',
-                            color: order.status === 'DELIVERED' ? '#0f0' : 'var(--gold)',
+                            background: order.status === 'DELIVERED' ? 'rgba(0,255,0,0.1)' : order.status === 'REFUND_REQUESTED' ? 'rgba(255,152,0,0.1)' : 'rgba(212,162,58,0.1)',
+                            color: order.status === 'DELIVERED' ? '#0f0' : order.status === 'REFUND_REQUESTED' ? '#ff9800' : 'var(--gold)',
                             borderRadius: '4px',
                             fontSize: '0.85rem'
                           }}>
@@ -346,14 +549,32 @@ export default function AdminDashboard() {
                           <select 
                             value={order.status}
                             onChange={(e) => handleStatusChange(order.id, e.target.value, order.status)}
-                            style={{ background: 'var(--pitch-black)', color: 'white', border: '1px solid var(--gold)', padding: '5px', outline: 'none' }}
+                            disabled={['REFUNDED', 'CANCELLED', 'REFUND_REQUESTED'].includes(order.status)}
+                            style={{ 
+                              background: 'var(--pitch-black)', color: 'white', 
+                              border: '1px solid var(--gold)', padding: '5px', outline: 'none',
+                              opacity: ['REFUNDED', 'CANCELLED', 'REFUND_REQUESTED'].includes(order.status) ? 0.6 : 1,
+                              cursor: ['REFUNDED', 'CANCELLED', 'REFUND_REQUESTED'].includes(order.status) ? 'not-allowed' : 'pointer'
+                            }}
                           >
-                            {['CREATED', 'PAID', 'PACKED', 'SHIPPED', 'DELIVERED'].map((statusOption, idx) => {
+                            {['CREATED', 'PAID', 'PACKED', 'SHIPPED', 'DELIVERED', 'REFUND_REQUESTED', 'REFUNDED', 'CANCELLED'].map((statusOption) => {
                               const statuses = ['CREATED', 'PAID', 'PACKED', 'SHIPPED', 'DELIVERED'];
                               const currentIndex = statuses.indexOf(order.status);
                               const optionIndex = statuses.indexOf(statusOption);
                               
-                              const isDisabled = optionIndex < currentIndex;
+                              let isDisabled = false;
+                              if (currentIndex !== -1 && optionIndex !== -1) {
+                                // Normal forward flow
+                                isDisabled = optionIndex < currentIndex;
+                              } else if (!['REFUNDED', 'CANCELLED', 'REFUND_REQUESTED'].includes(statusOption)) {
+                                // If current is refunded/cancelled/requested, everything else is disabled
+                                isDisabled = true;
+                              }
+                              
+                              // We don't want admins to manually select REFUNDED or REFUND_REQUESTED from the dropdown.
+                              if (['REFUNDED', 'REFUND_REQUESTED'].includes(statusOption) && order.status !== statusOption) {
+                                isDisabled = true;
+                              }
                               
                               return (
                                 <option 
@@ -369,11 +590,19 @@ export default function AdminDashboard() {
                           </select>
                         </td>
                       </tr>
-                    ))}
+                    )) : (
+                      <tr>
+                        <td colSpan="6" style={{ padding: '20px', textAlign: 'center', color: '#888' }}>
+                          No orders found matching your filters.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
-            ) : (
+            )}
+
+            {activeTab === 'products' && (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
                   <button 
@@ -528,6 +757,54 @@ export default function AdminDashboard() {
                 })()}
               </div>
             </div>
+
+            {['PAID', 'PACKED', 'SHIPPED', 'REFUND_REQUESTED'].includes(orderDetailsPopup.order.status) && (
+              <div style={{ marginTop: '20px', borderTop: '1px solid rgba(212,162,58,0.3)', paddingTop: '20px', textAlign: 'center' }}>
+                
+                {orderDetailsPopup.order.status === 'REFUND_REQUESTED' && (
+                  <div style={{ marginBottom: '20px', padding: '15px', background: 'rgba(255,152,0,0.1)', border: '1px solid #ff9800', textAlign: 'left' }}>
+                    <h4 style={{ color: '#ff9800', marginBottom: '5px' }}>⚠ Customer Requested a Refund</h4>
+                    <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}><strong>Reason:</strong> {orderDetailsPopup.order.refund_reason}</p>
+                  </div>
+                )}
+                
+                <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+                  <button 
+                    onClick={() => handleRefundOrder(orderDetailsPopup.order.id)}
+                    disabled={refundLoading}
+                    style={{ 
+                      background: 'transparent', border: '1px solid red', color: 'red', 
+                      padding: '10px 20px', cursor: refundLoading ? 'not-allowed' : 'pointer', 
+                      borderRadius: '4px', opacity: refundLoading ? 0.6 : 1, transition: 'all 0.2s'
+                    }}
+                    onMouseOver={(e) => !refundLoading && (e.target.style.background = 'rgba(255,0,0,0.1)')}
+                    onMouseOut={(e) => e.target.style.background = 'transparent'}
+                  >
+                    {refundLoading ? 'Processing...' : 'Approve & Refund via Razorpay'}
+                  </button>
+                  
+                  {orderDetailsPopup.order.status === 'REFUND_REQUESTED' && (
+                    <button 
+                      onClick={() => handleRejectRefund(orderDetailsPopup.order.id)}
+                      disabled={refundLoading}
+                      style={{ 
+                        background: 'transparent', border: '1px solid #888', color: '#ccc', 
+                        padding: '10px 20px', cursor: refundLoading ? 'not-allowed' : 'pointer', 
+                        borderRadius: '4px', opacity: refundLoading ? 0.6 : 1, transition: 'all 0.2s'
+                      }}
+                      onMouseOver={(e) => !refundLoading && (e.target.style.background = 'rgba(255,255,255,0.1)')}
+                      onMouseOut={(e) => e.target.style.background = 'transparent'}
+                    >
+                      Reject Request
+                    </button>
+                  )}
+                </div>
+
+                <p style={{ color: '#888', fontSize: '0.85rem', marginTop: '10px' }}>
+                  Approving will issue a full refund to the customer and restock the items.
+                </p>
+              </div>
+            )}
 
           </div>
         </div>
