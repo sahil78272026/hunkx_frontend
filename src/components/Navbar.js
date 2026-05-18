@@ -4,7 +4,7 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
-  const { totalItems, isLoaded } = useCart();
+  const { totalItems, isLoaded, clearCart } = useCart();
   const { user, openAuthModal, signOut, loading } = useAuth();
 
   return (
@@ -31,7 +31,7 @@ export default function Navbar() {
                   Admin
                 </Link>
               )}
-              <button onClick={signOut} className="nav-cta" style={{ background: 'transparent', border: '1px solid var(--gold)', cursor: 'pointer', padding: '0.5rem 1rem' }}>
+              <button onClick={() => { clearCart(); signOut(); }} className="nav-cta" style={{ background: 'transparent', border: '1px solid var(--gold)', cursor: 'pointer', padding: '0.5rem 1rem' }}>
                 Logout
               </button>
             </div>

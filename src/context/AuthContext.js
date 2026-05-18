@@ -73,6 +73,7 @@ export function AuthProvider({ children }) {
     if (error) {
       console.error("Error signing out:", error.message);
     } else {
+      localStorage.removeItem("hunkx_cart");
       window.location.href = '/';
     }
   };
