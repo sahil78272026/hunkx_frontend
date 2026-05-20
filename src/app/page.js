@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 export default function Home() {
   const sectionsRef = useRef([]);
+  const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -37,17 +38,157 @@ export default function Home() {
   return (
     <main>
       {/* HERO */}
-      <section className="hero" ref={addToRefs}>
-        <div className="curtain left"></div>
-        <div className="curtain right"></div>
-        <div>
+      <section className="hero split-hero" ref={addToRefs}>
+        <div className="hero-content">
           <div className="hero-ornament">Est. Ghaziabad</div>
-          <h1>HUNKX</h1>
+          <h1>Stylish <br/>Clothes</h1>
           <div className="hero-tagline">Drip Hard. Dress Sharp.</div>
-          <div className="hero-sub">Unisex Clothing</div>
+          <p className="hero-desc">Made from Soft, Durable, Premium Fabrics. <br/>A wardrobe built for people who don't blend in.</p>
           <div className="hero-cta-group">
-            <a href="#collections" className="btn-primary">Shop Collections</a>
-            <a href="#visit" className="btn-secondary">Visit Store</a>
+            <Link href="/shop" className="btn-pill-primary">Shop Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></Link>
+            <Link href="/shop" className="btn-pill-secondary">All Categories <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg></Link>
+          </div>
+          
+          <div className="hero-customers glass-panel">
+            <div className="customer-avatars">
+              <div className="avatar" style={{backgroundImage: 'url(https://i.pravatar.cc/100?img=12)'}}></div>
+              <div className="avatar" style={{backgroundImage: 'url(https://i.pravatar.cc/100?img=32)'}}></div>
+              <div className="avatar" style={{backgroundImage: 'url(https://i.pravatar.cc/100?img=42)'}}></div>
+            </div>
+            <div className="customer-info">
+              <span className="customer-label">Our Happy Community</span>
+              <div className="customer-stars">
+                <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span> 
+                <span className="rating-text">4.9 (450+ Reviews)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="hero-visual">
+          <div className="gold-circle"></div>
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Model" className="hero-model" />
+        </div>
+      </section>
+
+      {/* CATEGORY BANNERS */}
+      <section className="category-banners" ref={addToRefs}>
+        <Link href="/shop?category=women" className="cat-banner">
+          <img src="https://images.unsplash.com/photo-1434389678232-0402ab641126?w=400&q=80" alt="Women"/>
+          <span>Women Gallery &rarr;</span>
+        </Link>
+        <Link href="/shop?category=street" className="cat-banner">
+          <img src="https://images.unsplash.com/photo-1519241047957-be31d7379a5d?w=400&q=80" alt="Street"/>
+          <span>Streetwear &rarr;</span>
+        </Link>
+        <Link href="/shop?category=men" className="cat-banner">
+          <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&q=80" alt="Men"/>
+          <span>Men&apos;s Fashion &rarr;</span>
+        </Link>
+        <Link href="/shop?category=signature" className="cat-banner">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80" alt="Signature"/>
+          <span>Signature Fits &rarr;</span>
+        </Link>
+      </section>
+
+      {/* COLLECTIONS / PRODUCTS */}
+      <section id="collections" className="collections" ref={addToRefs}>
+        <div className="collection-header">
+          <span className="section-label">Collections</span>
+          <h2 className="section-title">Crafted in <span>drops</span>.</h2>
+        </div>
+        
+        <div className="filter-row">
+          {['All', 'Dresses', 'T-shirts', 'Denim', 'Jackets', 'Coats', 'Shoes'].map(f => (
+            <div 
+              key={f} 
+              className={`filter-item ${activeFilter === f ? 'active' : ''}`}
+              onClick={() => setActiveFilter(f)}
+            >
+              <div className="filter-icon">
+                 {f === 'All' ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg> : 
+                  f === 'Dresses' ? '👗' : 
+                  f === 'T-shirts' ? '👕' : 
+                  f === 'Denim' ? '👖' : 
+                  f === 'Jackets' ? '🧥' : 
+                  f === 'Coats' ? '🥼' : '👟'}
+              </div>
+              <span>{f}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="product-grid">
+          <div className="prod-card">
+            <div className="prod-img">
+              <img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=500&q=80" alt="Product" />
+            </div>
+            <div className="prod-info">
+              <h4>Acid Wash Flannel</h4>
+              <div className="prod-price-row">
+                <span className="prod-price">₹2499</span>
+                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+              </div>
+              <Link href="/shop" className="prod-add-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> 
+                Explore
+              </Link>
+            </div>
+          </div>
+
+          <div className="prod-card active-sim">
+            <div className="prod-img">
+              <div className="prod-tags">
+                <span className="ptag hot">Hot</span>
+                <span className="ptag new">New</span>
+              </div>
+              <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=500&q=80" alt="Product" />
+            </div>
+            <div className="prod-info">
+              <h4>Signature Drop Dress</h4>
+              <div className="prod-price-row">
+                <span className="prod-price">₹3999</span>
+                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+              </div>
+              <Link href="/shop" className="prod-add-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> 
+                Explore
+              </Link>
+            </div>
+          </div>
+
+          <div className="prod-card">
+            <div className="prod-img">
+              <img src="https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=500&q=80" alt="Product" />
+            </div>
+            <div className="prod-info">
+              <h4>Street Crop & Blazer</h4>
+              <div className="prod-price-row">
+                <span className="prod-price">₹4500</span>
+                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+              </div>
+              <Link href="/shop" className="prod-add-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> 
+                Explore
+              </Link>
+            </div>
+          </div>
+
+          <div className="prod-card">
+            <div className="prod-img">
+              <img src="https://images.unsplash.com/photo-1485230895905-ef203e48102b?w=500&q=80" alt="Product" />
+            </div>
+            <div className="prod-info">
+              <h4>Summer Floral Skirt</h4>
+              <div className="prod-price-row">
+                <span className="prod-price">₹1899</span>
+                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+              </div>
+              <Link href="/shop" className="prod-add-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> 
+                Explore
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -81,43 +222,6 @@ export default function Home() {
               <div className="visual-text">DRIP HARD<br/>DRESS SHARP</div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* COLLECTIONS */}
-      <section id="collections" className="collections" ref={addToRefs}>
-        <div className="collection-header">
-          <span className="section-label">Collections</span>
-          <h2 className="section-title">Crafted in <span>drops</span>.</h2>
-        </div>
-        <div className="collection-grid">
-          <Link href="/shop" className="collection-card card-1" style={{ textDecoration: 'none' }}>
-            <div className="card-bg"></div>
-            <div className="card-content">
-              <div className="card-tag">Signature</div>
-              <div className="card-title">Acid Wash</div>
-              <div className="card-desc">Bleached. Rugged. Unapologetic.</div>
-              <div className="card-link">Explore →</div>
-            </div>
-          </Link>
-          <Link href="/shop" className="collection-card card-2" style={{ textDecoration: 'none' }}>
-            <div className="card-bg"></div>
-            <div className="card-content">
-              <div className="card-tag">New Year</div>
-              <div className="card-title">&apos;26 Edit</div>
-              <div className="card-desc">A fresh start, sharply dressed.</div>
-              <div className="card-link">Explore →</div>
-            </div>
-          </Link>
-          <Link href="/shop" className="collection-card card-3" style={{ textDecoration: 'none' }}>
-            <div className="card-bg"></div>
-            <div className="card-content">
-              <div className="card-tag">Street</div>
-              <div className="card-title">Everyday Drip</div>
-              <div className="card-desc">Built for the daily flex.</div>
-              <div className="card-link">Explore →</div>
-            </div>
-          </Link>
         </div>
       </section>
 

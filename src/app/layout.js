@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import BackgroundElements from "@/components/BackgroundElements";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
+import { ToastProvider } from "@/context/ToastContext";
 import AuthModal from "@/components/AuthModal";
 
 export const metadata = {
@@ -22,12 +23,14 @@ export default function RootLayout({ children }) {
       <body>
         <BackgroundElements />
         <AuthProvider>
-          <CartProvider>
-            <Navbar />
-            <AuthModal />
-            {children}
-            <Footer />
-          </CartProvider>
+          <ToastProvider>
+            <CartProvider>
+              <Navbar />
+              <AuthModal />
+              {children}
+              <Footer />
+            </CartProvider>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

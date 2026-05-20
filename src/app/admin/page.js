@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { useToast } from "@/context/ToastContext";
 
 export default function AdminDashboard() {
   const { user, session, loading: authLoading, openAuthModal } = useAuth();
   const router = useRouter();
+  const { showToast } = useToast();
   
   const [stats, setStats] = useState(null);
   const [analyticsData, setAnalyticsData] = useState(null);
@@ -122,8 +124,9 @@ export default function AdminDashboard() {
       
       // Refresh data
       fetchAdminData();
+      showToast("Order status updated", "success");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
     }
   };
 
@@ -143,11 +146,11 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || "Failed to process refund");
       
-      alert("Refund processed successfully!");
+      showToast("Refund processed successfully!", "success");
       setOrderDetailsPopup({ isOpen: false, order: null });
       fetchAdminData();
     } catch (err) {
-      alert("Refund Error: " + err.message);
+      showToast("Refund Error: " + err.message, "error");
     } finally {
       setRefundLoading(false);
     }
@@ -172,11 +175,11 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || "Failed to reject refund");
       
-      alert("Refund request rejected successfully!");
+      showToast("Refund request rejected successfully!", "success");
       setOrderDetailsPopup({ isOpen: false, order: null });
       fetchAdminData();
     } catch (err) {
-      alert("Error: " + err.message);
+      showToast(err.message, "error");
     } finally {
       setRefundLoading(false);
     }
@@ -233,8 +236,9 @@ export default function AdminDashboard() {
       setNewProductForm(initialProductForm);
       setUploadFile(null);
       fetchAdminData();
+      showToast("Product created successfully", "success");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
     } finally {
       setIsUploading(false);
     }
@@ -281,8 +285,9 @@ export default function AdminDashboard() {
       setNewProductForm(initialProductForm);
       setUploadFile(null);
       fetchAdminData();
+      showToast("Product updated successfully", "success");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
     } finally {
       setIsUploading(false);
     }
@@ -300,8 +305,9 @@ export default function AdminDashboard() {
       
       if (!res.ok) throw new Error("Failed to delete product");
       fetchAdminData();
+      showToast("Product deleted", "info");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
     }
   };
 
@@ -316,7 +322,21 @@ export default function AdminDashboard() {
     return matchesSearch && matchesStatus;
   });
 
-  if (authLoading || (!user && !authLoading)) return <div style={{ paddingTop: '150px', textAlign: 'center' }}>Loading admin dashboard...</div>;
+  if (authLoading || (!user && !authLoading)) {
+    return (
+      <main style={{ paddingTop: '120px', minHeight: '100vh', padding: '120px 5% 60px 5%' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div className="skeleton skeleton-title" style={{ margin: '0 auto 40px', width: '400px', height: '50px' }}></div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '40px' }}>
+            <div className="skeleton skeleton-box" style={{ height: '120px' }}></div>
+            <div className="skeleton skeleton-box" style={{ height: '120px' }}></div>
+            <div className="skeleton skeleton-box" style={{ height: '120px' }}></div>
+          </div>
+          <div className="skeleton skeleton-box" style={{ height: '500px' }}></div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px', paddingLeft: '5%', paddingRight: '5%' }}>
@@ -330,7 +350,14 @@ export default function AdminDashboard() {
             {error}
           </div>
         ) : loadingData ? (
-          <p style={{ textAlign: 'center' }}>Loading highly classified data...</p>
+          <div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '40px' }}>
+              <div className="skeleton skeleton-box" style={{ height: '120px' }}></div>
+              <div className="skeleton skeleton-box" style={{ height: '120px' }}></div>
+              <div className="skeleton skeleton-box" style={{ height: '120px' }}></div>
+            </div>
+            <div className="skeleton skeleton-box" style={{ height: '500px' }}></div>
+          </div>
         ) : (
           <>
             {/* Stats Overview */}
@@ -639,7 +666,7 @@ export default function AdminDashboard() {
                         >Delete</button>
                       </div>
                       
-                      <div style={{ height: '200px', background: `url(${prod.images[0]}) center/cover`, marginBottom: '15px', border: '1px solid var(--gold)' }}></div>
+                      <div className="image-3d-card" style={{ height: '200px', background: `url(${prod.images[0]}) center/cover`, marginBottom: '15px' }}></div>
                       <h4 style={{ color: 'var(--cream)', fontSize: '1.1rem', marginBottom: '5px', paddingRight: '100px' }}>{prod.name}</h4>
                       <p style={{ color: 'var(--gold)', marginBottom: '5px' }}>₹{prod.price}</p>
                       <p style={{ color: '#888', fontSize: '0.9rem' }}>Category: {prod.category}</p>
@@ -665,8 +692,7 @@ export default function AdminDashboard() {
             @keyframes adminFadeIn { from { opacity: 0; } to { opacity: 1; } }
             @keyframes adminSlideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
           `}</style>
-          <div style={{
-            background: 'var(--pitch-black)', border: '1px solid var(--gold)',
+          <div className="glass-modal" style={{
             padding: '40px', maxWidth: '500px', width: '90%', textAlign: 'center',
             animation: 'adminSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
           }}>
@@ -710,8 +736,7 @@ export default function AdminDashboard() {
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999,
           animation: 'adminFadeIn 0.2s ease-out'
         }}>
-          <div style={{
-            background: 'var(--pitch-black)', border: '1px solid var(--gold)',
+          <div className="glass-modal" style={{
             padding: '30px', maxWidth: '600px', width: '90%', maxHeight: '80vh', overflowY: 'auto',
             animation: 'adminSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)', position: 'relative'
           }}>
@@ -818,8 +843,7 @@ export default function AdminDashboard() {
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999,
           animation: 'adminFadeIn 0.2s ease-out'
         }}>
-          <div style={{
-            background: 'var(--pitch-black)', border: '1px solid var(--gold)',
+          <div className="glass-modal" style={{
             padding: '30px', maxWidth: '500px', width: '90%', maxHeight: '90vh', overflowY: 'auto',
             animation: 'adminSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)', position: 'relative'
           }}>
