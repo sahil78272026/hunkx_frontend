@@ -45,23 +45,7 @@ export default function Home() {
           <div className="hero-tagline">Drip Hard. Dress Sharp.</div>
           <p className="hero-desc">Made from Soft, Durable, Premium Fabrics. <br/>A wardrobe built for people who don't blend in.</p>
           <div className="hero-cta-group">
-            <Link href="/shop" className="btn-pill-primary">Shop Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></Link>
-            <Link href="/shop" className="btn-pill-secondary">All Categories <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg></Link>
-          </div>
-          
-          <div className="hero-customers glass-panel">
-            <div className="customer-avatars">
-              <div className="avatar" style={{backgroundImage: 'url(https://i.pravatar.cc/100?img=12)'}}></div>
-              <div className="avatar" style={{backgroundImage: 'url(https://i.pravatar.cc/100?img=32)'}}></div>
-              <div className="avatar" style={{backgroundImage: 'url(https://i.pravatar.cc/100?img=42)'}}></div>
-            </div>
-            <div className="customer-info">
-              <span className="customer-label">Our Happy Community</span>
-              <div className="customer-stars">
-                <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span> 
-                <span className="rating-text">4.9 (450+ Reviews)</span>
-              </div>
-            </div>
+            <Link href="/shop" className="btn-pill-primary">Shop the Drop <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></Link>
           </div>
         </div>
         
@@ -69,26 +53,6 @@ export default function Home() {
           <div className="gold-circle"></div>
           <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Model" className="hero-model" />
         </div>
-      </section>
-
-      {/* CATEGORY BANNERS */}
-      <section className="category-banners" ref={addToRefs}>
-        <Link href="/shop?category=women" className="cat-banner">
-          <img src="https://images.unsplash.com/photo-1434389678232-0402ab641126?w=400&q=80" alt="Women"/>
-          <span>Women Gallery &rarr;</span>
-        </Link>
-        <Link href="/shop?category=street" className="cat-banner">
-          <img src="https://images.unsplash.com/photo-1519241047957-be31d7379a5d?w=400&q=80" alt="Street"/>
-          <span>Streetwear &rarr;</span>
-        </Link>
-        <Link href="/shop?category=men" className="cat-banner">
-          <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&q=80" alt="Men"/>
-          <span>Men&apos;s Fashion &rarr;</span>
-        </Link>
-        <Link href="/shop?category=signature" className="cat-banner">
-          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80" alt="Signature"/>
-          <span>Signature Fits &rarr;</span>
-        </Link>
       </section>
 
       {/* COLLECTIONS / PRODUCTS */}
@@ -201,20 +165,6 @@ export default function Home() {
             <h2 className="section-title">Style that <span>commands</span> the street.</h2>
             <p>Hunkx is a unisex clothing label born in Ghaziabad — for those who treat every outfit like a statement. Bold cuts. Confident silhouettes. A wardrobe built for people who don't blend in.</p>
             <p>From acid-washed denim to sharp seasonal drops, every piece is curated to help you drip hard and dress sharp.</p>
-            <div className="about-stats">
-              <div className="stat">
-                <div className="stat-num">78+</div>
-                <div className="stat-label">Drops</div>
-              </div>
-              <div className="stat">
-                <div className="stat-num">90+</div>
-                <div className="stat-label">Community</div>
-              </div>
-              <div className="stat">
-                <div className="stat-num">1</div>
-                <div className="stat-label">Flagship</div>
-              </div>
-            </div>
           </div>
           <div className="about-visual">
             <div className="visual-inner">
@@ -227,22 +177,21 @@ export default function Home() {
 
       {/* GALLERY */}
       <section id="gallery" ref={addToRefs}>
-        <div style={{ textAlign: 'center' }}>
-          <span className="section-label">@hunkxapparel</span>
-          <h2 className="section-title">Straight from the <span>feed</span>.</h2>
-        </div>
-        <div className="gallery-grid">
-          <div className="gallery-item gi-1"><span className="gi-label">Denim</span></div>
-          <div className="gallery-item gi-2"><span className="gi-label">Street</span></div>
-          <div className="gallery-item gi-3"><span className="gi-label">Gold</span></div>
-          <div className="gallery-item gi-4"><span className="gi-label">Skull</span></div>
-          <div className="gallery-item gi-5"><span className="gi-label">Drop</span></div>
-          <div className="gallery-item gi-6"><span className="gi-label">Wash</span></div>
-          <div className="gallery-item gi-7"><span className="gi-label">2026</span></div>
-          <div className="gallery-item gi-8"><span className="gi-label">Fit</span></div>
-        </div>
-        <div className="gallery-cta">
-          <a href="https://instagram.com/hunkxapparel" target="_blank" rel="noopener noreferrer" className="btn-secondary">Follow @hunkxapparel</a>
+        <div className="community-banner" style={{
+          position: 'relative',
+          padding: '80px 40px',
+          borderRadius: '24px',
+          background: 'linear-gradient(rgba(10,8,5,0.8), rgba(10,8,5,0.8)), url(https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1200) center/cover',
+          border: '1px solid rgba(212,162,58,0.2)',
+          textAlign: 'center',
+          maxWidth: '1200px',
+          margin: '0 auto'
+        }}>
+          <div className="community-content" style={{position: 'relative', zIndex: 2}}>
+            <span className="section-label">@hunkxapparel</span>
+            <h2 className="section-title" style={{marginBottom: '30px'}}>Join the <span>community</span>.</h2>
+            <a href="https://instagram.com/hunkxapparel" target="_blank" rel="noopener noreferrer" className="btn-pill-secondary">Follow Us on Instagram</a>
+          </div>
         </div>
       </section>
 
@@ -264,7 +213,7 @@ export default function Home() {
               <div className="info-label">Instagram</div>
               <div className="info-value"><a href="https://instagram.com/hunkxapparel" target="_blank" rel="noopener noreferrer">@hunkxapparel</a></div>
             </div>
-            <a href="https://maps.app.goo.gl/rHiqQWMH3msZEr2b8" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ marginTop: '10px' }}>Get Directions</a>
+            <a href="https://maps.app.goo.gl/rHiqQWMH3msZEr2b8" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ marginTop: '10px', borderRadius: '9999px' }}>Get Directions</a>
           </div>
           <div className="map-card">
             <div></div>
