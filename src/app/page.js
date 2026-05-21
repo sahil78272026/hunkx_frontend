@@ -40,10 +40,10 @@ export default function Home() {
       {/* HERO */}
       <section className="hero split-hero" ref={addToRefs}>
         <div className="hero-content">
-          <div className="hero-ornament">Est. Ghaziabad</div>
-          <h1>Stylish <br/>Clothes</h1>
-          <div className="hero-tagline">Drip Hard. Dress Sharp.</div>
-          <p className="hero-desc">Made from Soft, Durable, Premium Fabrics. <br/>A wardrobe built for people who don't blend in.</p>
+          <div className="hero-ornament">Est. Delhi</div>
+          <h1>Yash <br/>Designers</h1>
+          <div className="hero-tagline">Beautiful outfits in modern designs.</div>
+          <p className="hero-desc">Outfits that are in season and trending. <br/>Shipping worldwide.</p>
           <div className="hero-cta-group">
             <Link href="/shop" className="btn-pill-primary">Shop the Drop <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></Link>
           </div>
@@ -162,9 +162,9 @@ export default function Home() {
         <div className="about">
           <div className="about-content">
             <span className="section-label">The Brand</span>
-            <h2 className="section-title">Style that <span>commands</span> the street.</h2>
-            <p>Hunkx is a unisex clothing label born in Ghaziabad — for those who treat every outfit like a statement. Bold cuts. Confident silhouettes. A wardrobe built for people who don't blend in.</p>
-            <p>From acid-washed denim to sharp seasonal drops, every piece is curated to help you drip hard and dress sharp.</p>
+            <h2 className="section-title">Style that <span>stands out</span>.</h2>
+            <p>Yash Krishna Designs is a women's clothing shop based in Chandni Chowk, Delhi — offering beautiful outfits in modern designs that are in season and trending.</p>
+            <p>Shipping worldwide. We ensure you get the best quality traditional and modern fusion wear.</p>
           </div>
           <div className="about-visual">
             <div className="visual-inner">
@@ -188,7 +188,7 @@ export default function Home() {
           margin: '0 auto'
         }}>
           <div className="community-content" style={{position: 'relative', zIndex: 2}}>
-            <span className="section-label">@hunkxapparel</span>
+            <span className="section-label">@yash_krishna_designs_pvt_ltd</span>
             <h2 className="section-title" style={{marginBottom: '30px'}}>Join the <span>community</span>.</h2>
             <a href="https://instagram.com/hunkxapparel" target="_blank" rel="noopener noreferrer" className="btn-pill-secondary">Follow Us on Instagram</a>
           </div>
@@ -203,7 +203,7 @@ export default function Home() {
             <h2 className="section-title">Come see the <span>fits</span> in person.</h2>
             <div className="info-block">
               <div className="info-label">Address</div>
-              <div className="info-value">6/1B, Shop No. 5, Sec-5,<br/>Rajender Nagar, Sahibabad,<br/>Ghaziabad, U.P. 201005</div>
+              <div className="info-value">954/4 Bhojpura Maliwara,<br/>Chandni Chowk, Nai Sarak,<br/>Delhi, India 110006</div>
             </div>
             <div className="info-block">
               <div className="info-label">Phone</div>
@@ -211,7 +211,7 @@ export default function Home() {
             </div>
             <div className="info-block">
               <div className="info-label">Instagram</div>
-              <div className="info-value"><a href="https://instagram.com/hunkxapparel" target="_blank" rel="noopener noreferrer">@hunkxapparel</a></div>
+              <div className="info-value"><a href="https://instagram.com/yash_krishna_designs_pvt_ltd" target="_blank" rel="noopener noreferrer">@yash_krishna_designs_pvt_ltd</a></div>
             </div>
             <a href="https://maps.app.goo.gl/rHiqQWMH3msZEr2b8" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ marginTop: '10px', borderRadius: '9999px' }}>Get Directions</a>
           </div>

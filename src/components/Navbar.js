@@ -9,7 +9,7 @@ export default function Navbar() {
 
   return (
     <nav>
-      <div className="logo"><Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>HUNKX</Link></div>
+      <div className="logo"><Link href="/" style={{ color: 'inherit', textDecoration: 'none', fontSize: '1.2rem' }}>Yash Designers</Link></div>
       <ul className="nav-links">
         <li><Link href="/shop">Shop</Link></li>
         <li><Link href="/#collections">Collections</Link></li>
