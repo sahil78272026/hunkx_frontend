@@ -200,12 +200,12 @@ export default function AdminDashboard() {
       if (uploadFile) {
         const fileExt = uploadFile.name.split('.').pop();
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-        const { data, error } = await supabase.storage.from('hunkx_storage_sb').upload(`public/${fileName}`, uploadFile);
+        const { data, error } = await supabase.storage.from('hunkx_storage_sb').upload(`products/${fileName}`, uploadFile);
         
         if (error) throw new Error("Image Upload Failed: " + error.message);
         
         // Get public URL
-        const { data: publicUrlData } = supabase.storage.from('hunkx_storage_sb').getPublicUrl(`public/${fileName}`);
+        const { data: publicUrlData } = supabase.storage.from('hunkx_storage_sb').getPublicUrl(`products/${fileName}`);
         imageUrl = publicUrlData.publicUrl;
       } else if (!imageUrl) {
         throw new Error("Please select an image file.");
@@ -254,9 +254,9 @@ export default function AdminDashboard() {
       if (uploadFile) {
         const fileExt = uploadFile.name.split('.').pop();
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-        const { data, error } = await supabase.storage.from('hunkx_storage_sb').upload(`public/${fileName}`, uploadFile);
+        const { data, error } = await supabase.storage.from('hunkx_storage_sb').upload(`products/${fileName}`, uploadFile);
         if (error) throw new Error("Image Upload Failed: " + error.message);
-        const { data: publicUrlData } = supabase.storage.from('hunkx_storage_sb').getPublicUrl(`public/${fileName}`);
+        const { data: publicUrlData } = supabase.storage.from('hunkx_storage_sb').getPublicUrl(`products/${fileName}`);
         imageUrl = publicUrlData.publicUrl;
       }
 
@@ -324,7 +324,7 @@ export default function AdminDashboard() {
 
   if (authLoading || (!user && !authLoading)) {
     return (
-      <main style={{ paddingTop: '120px', minHeight: '100vh', padding: '120px 5% 60px 5%' }}>
+      <main style={{ minHeight: '100vh', padding: '120px 5% 60px 5%' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div className="skeleton skeleton-title" style={{ margin: '0 auto 40px', width: '400px', height: '50px' }}></div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '40px' }}>
@@ -477,7 +477,7 @@ export default function AdminDashboard() {
                 </div>
                 
                 <h2 style={{ fontFamily: 'Cinzel', color: 'var(--gold)', marginBottom: '20px' }}>7-Day Revenue Trend</h2>
-                <div style={{ background: 'var(--black-soft)', padding: '30px', border: '1px solid rgba(212,162,58,0.3)', height: '300px', display: 'flex', alignItems: 'flex-end', gap: '10px', overflowX: 'auto', paddingTop: '60px' }}>
+                <div style={{ background: 'var(--black-soft)', padding: '60px 30px 30px 30px', border: '1px solid rgba(212,162,58,0.3)', height: '300px', display: 'flex', alignItems: 'flex-end', gap: '10px', overflowX: 'auto' }}>
                   {analyticsData.trend_data.map((day, idx) => {
                     const maxRevenue = Math.max(...analyticsData.trend_data.map(d => d.revenue), 1);
                     const heightPercent = (day.revenue / maxRevenue) * 100;

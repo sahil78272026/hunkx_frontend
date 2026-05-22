@@ -103,16 +103,32 @@ export default function TrackOrderPage() {
         description: "Secure Order Payment",
         image: "https://placehold.co/150x150/0a0805/d4a23a?text=HUNKX",
         order_id: orderStatus.razorpay_order_id, 
-        handler: function (response) {
-          // Success! In checkout, we stored the order in localStorage, let's do the same
-          const orderData = {
-            id: orderStatus.id,
-            total: orderStatus.total_amount,
-            items: orderStatus.items || [],
-            payment_id: response.razorpay_payment_id
-          };
-          localStorage.setItem("hunkx_pending_order", JSON.stringify(orderData));
-          router.push("/success");
+        handler: async function (response) {
+          try {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const verifyRes = await fetch(`${API_URL}/api/v1/orders/verify-payment`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+            
+            if (!verifyRes.ok) throw new Error("Payment verification failed on server");
+            
+            const orderData = {
+              id: orderStatus.id,
+              total: orderStatus.total_amount,
+              items: orderStatus.items || [],
+              payment_id: response.razorpay_payment_id
+            };
+            localStorage.setItem("hunkx_pending_order", JSON.stringify(orderData));
+            router.push("/success");
+          } catch(e) {
+            alert("Error saving payment: " + e.message);
+          }
         },
         prefill: {
           email: orderStatus.customer_email || user.email,

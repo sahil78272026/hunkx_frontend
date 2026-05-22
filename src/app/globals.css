@@ -91,8 +91,8 @@ nav {
   transition: width 0.3s;
 }
 
-.nav-links a:hover { color: var(--gold-bright); }
-.nav-links a:hover::after { width: 100%; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold-bright); }
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 
 .nav-cta {
   background: transparent;

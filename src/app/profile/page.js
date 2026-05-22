@@ -148,7 +148,7 @@ export default function ProfilePage() {
 
   if (authLoading || (!user && !authLoading)) {
     return (
-      <main style={{ paddingTop: '120px', minHeight: '100vh', padding: '120px 5% 60px 5%' }}>
+      <main style={{ minHeight: '100vh', padding: '120px 5% 60px 5%' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <div className="skeleton skeleton-title" style={{ margin: '0 auto 40px', width: '300px', height: '40px' }}></div>
           <div className="skeleton skeleton-box" style={{ marginBottom: '40px', height: '120px' }}></div>

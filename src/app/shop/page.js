@@ -26,12 +26,12 @@ export default function ShopPage() {
   }, []);
   
   return (
-    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '60px', paddingLeft: '5%', paddingRight: '5%' }}>
-      <button onClick={() => router.back()} style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer', marginBottom: '30px', fontSize: '1rem', fontFamily: 'Cinzel, serif' }}>
+    <main style={{ paddingTop: '100px', minHeight: '100vh', paddingBottom: '60px', paddingLeft: '5%', paddingRight: '5%' }}>
+      <button onClick={() => router.back()} style={{ background: 'transparent', border: 'none', color: 'var(--gold)', cursor: 'pointer', marginBottom: '10px', fontSize: '1rem', fontFamily: 'Cinzel, serif' }}>
         ← Back
       </button>
-      <section style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+      <section style={{ maxWidth: '1400px', margin: '0 auto', paddingTop: '20px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <span className="section-label">Catalog</span>
           <h1 className="section-title">All <span>Drops</span></h1>
         </div>

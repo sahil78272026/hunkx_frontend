@@ -56,124 +56,156 @@ export default function Home() {
       </section>
 
       {/* COLLECTIONS / PRODUCTS */}
-      <section id="collections" className="collections" ref={addToRefs}>
+      {/* MEN'S COLLECTION */}
+      <section id="mens-collection" className="collections" ref={addToRefs} style={{paddingTop: '60px', paddingBottom: '40px'}}>
         <div className="collection-header">
-          <span className="section-label">Collections</span>
-          <h2 className="section-title">Crafted in <span>drops</span>.</h2>
+          <span className="section-label" style={{color: 'var(--gold-bright)'}}>For Him</span>
+          <h2 className="section-title">Boss-Level <span>Sophistication</span></h2>
+          <p style={{textAlign: 'center', color: 'var(--cream)', opacity: 0.8, maxWidth: '600px', margin: '0 auto', fontSize: '0.9rem'}}>
+            Premium fits, earth-tone essentials, and retro athletic streetwear curated for the modern man.
+          </p>
         </div>
         
-        <div className="filter-row">
-          {['All', 'Dresses', 'T-shirts', 'Denim', 'Jackets', 'Coats', 'Shoes'].map(f => (
-            <div 
-              key={f} 
-              className={`filter-item ${activeFilter === f ? 'active' : ''}`}
-              onClick={() => setActiveFilter(f)}
-            >
-              <div className="filter-icon">
-                 {f === 'All' ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg> : 
-                  f === 'Dresses' ? '👗' : 
-                  f === 'T-shirts' ? '👕' : 
-                  f === 'Denim' ? '👖' : 
-                  f === 'Jackets' ? '🧥' : 
-                  f === 'Coats' ? '🥼' : '👟'}
-              </div>
-              <span>{f}</span>
-            </div>
-          ))}
-        </div>
-
         <div className="product-grid">
-          <div className="prod-card">
+          <div className="prod-card active-sim">
             <div className="prod-img">
-              <img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=500&q=80" alt="Product" />
+              <div className="prod-tags"><span className="ptag hot">Must Have</span></div>
+              <img src="https://rlrcugmcgkbuhridzryj.supabase.co/storage/v1/object/public/hunkx_storage_sb/products/mens-smart-brown.jpeg" alt="Brown BOSS Tee" />
             </div>
             <div className="prod-info">
-              <h4>Acid Wash Flannel</h4>
+              <h4>Earth-Tone Smart Casual Fit</h4>
+              <p style={{fontSize: '0.8rem', color: 'gray', marginBottom: '10px', height: '40px'}}>Fitted brown tee styled with beige tailored trousers.</p>
               <div className="prod-price-row">
                 <span className="prod-price">₹2499</span>
                 <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
               </div>
               <Link href="/shop" className="prod-add-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> 
-                Explore
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Shop Now
               </Link>
             </div>
           </div>
 
+          <div className="prod-card">
+            <div className="prod-img">
+              <div className="prod-tags"><span className="ptag new">Vintage</span></div>
+              <img src="https://rlrcugmcgkbuhridzryj.supabase.co/storage/v1/object/public/hunkx_storage_sb/products/mens-sports-red.jpeg" alt="Retro Sports Tee" />
+            </div>
+            <div className="prod-info">
+              <h4>Retro Athletic Streetwear</h4>
+              <p style={{fontSize: '0.8rem', color: 'gray', marginBottom: '10px', height: '40px'}}>Red & black graphic tee paired with oversized vintage denim.</p>
+              <div className="prod-price-row">
+                <span className="prod-price">₹2199</span>
+                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+              </div>
+              <Link href="/shop" className="prod-add-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Shop Now
+              </Link>
+            </div>
+          </div>
+
+          <div className="prod-card">
+            <div className="prod-img">
+              <img src="https://rlrcugmcgkbuhridzryj.supabase.co/storage/v1/object/public/hunkx_storage_sb/products/mens-smart-burgundy.jpeg" alt="Burgundy Smart Casual" />
+            </div>
+            <div className="prod-info">
+              <h4>Burgundy Elegance Fit</h4>
+              <p style={{fontSize: '0.8rem', color: 'gray', marginBottom: '10px', height: '40px'}}>Fitted burgundy tee for that elevated everyday look.</p>
+              <div className="prod-price-row">
+                <span className="prod-price">₹2499</span>
+                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+              </div>
+              <Link href="/shop" className="prod-add-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Shop Now
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* WOMEN'S COLLECTION */}
+      <section id="womens-collection" className="collections" ref={addToRefs} style={{paddingTop: '40px', paddingBottom: '80px', background: 'transparent'}}>
+        <div className="collection-header">
+          <span className="section-label" style={{color: 'var(--gold-deep)'}}>For Her</span>
+          <h2 className="section-title">Bold <span>Streetwear</span></h2>
+          <p style={{textAlign: 'center', color: 'var(--cream)', opacity: 0.8, maxWidth: '600px', margin: '0 auto', fontSize: '0.9rem'}}>
+            Vibrant jerseys, edgy flame graphics, and utility-inspired aesthetics to make a statement.
+          </p>
+        </div>
+        
+        <div className="product-grid">
           <div className="prod-card active-sim">
             <div className="prod-img">
-              <div className="prod-tags">
-                <span className="ptag hot">Hot</span>
-                <span className="ptag new">New</span>
-              </div>
-              <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=500&q=80" alt="Product" />
+              <div className="prod-tags"><span className="ptag hot">Trending</span></div>
+              <img src="https://rlrcugmcgkbuhridzryj.supabase.co/storage/v1/object/public/hunkx_storage_sb/products/womens-sports-purple.jpeg" alt="Purple Oversized Jersey" />
             </div>
             <div className="prod-info">
-              <h4>Signature Drop Dress</h4>
-              <div className="prod-price-row">
-                <span className="prod-price">₹3999</span>
-                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-              </div>
-              <Link href="/shop" className="prod-add-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> 
-                Explore
-              </Link>
-            </div>
-          </div>
-
-          <div className="prod-card">
-            <div className="prod-img">
-              <img src="https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=500&q=80" alt="Product" />
-            </div>
-            <div className="prod-info">
-              <h4>Street Crop & Blazer</h4>
-              <div className="prod-price-row">
-                <span className="prod-price">₹4500</span>
-                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-              </div>
-              <Link href="/shop" className="prod-add-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> 
-                Explore
-              </Link>
-            </div>
-          </div>
-
-          <div className="prod-card">
-            <div className="prod-img">
-              <img src="https://images.unsplash.com/photo-1485230895905-ef203e48102b?w=500&q=80" alt="Product" />
-            </div>
-            <div className="prod-info">
-              <h4>Summer Floral Skirt</h4>
+              <h4>Vibrant '08 Flying' Jersey</h4>
+              <p style={{fontSize: '0.8rem', color: 'gray', marginBottom: '10px', height: '40px'}}>Bold purple athletic streetwear paired with distressed denim.</p>
               <div className="prod-price-row">
                 <span className="prod-price">₹1899</span>
                 <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
               </div>
               <Link href="/shop" className="prod-add-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> 
-                Explore
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Shop Now
+              </Link>
+            </div>
+          </div>
+
+          <div className="prod-card">
+            <div className="prod-img">
+              <div className="prod-tags"><span className="ptag new">Street</span></div>
+              <img src="https://rlrcugmcgkbuhridzryj.supabase.co/storage/v1/object/public/hunkx_storage_sb/products/womens-streetwear-black.jpeg" alt="Flame Graphic Jersey" />
+            </div>
+            <div className="prod-info">
+              <h4>'88' Flame Graphic Jersey</h4>
+              <p style={{fontSize: '0.8rem', color: 'gray', marginBottom: '10px', height: '40px'}}>Turn up the heat with oversized edgy black streetwear.</p>
+              <div className="prod-price-row">
+                <span className="prod-price">₹1999</span>
+                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+              </div>
+              <Link href="/shop" className="prod-add-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Shop Now
+              </Link>
+            </div>
+          </div>
+
+          <div className="prod-card">
+            <div className="prod-img">
+              <img src="https://rlrcugmcgkbuhridzryj.supabase.co/storage/v1/object/public/hunkx_storage_sb/products/womens-utility-camo.jpeg" alt="Utility Crop & Camo" />
+            </div>
+            <div className="prod-info">
+              <h4>Utility Crop & Camo Fit</h4>
+              <p style={{fontSize: '0.8rem', color: 'gray', marginBottom: '10px', height: '40px'}}>Olive brown long-sleeve crop top with relaxed cargo pants.</p>
+              <div className="prod-price-row">
+                <span className="prod-price">₹2899</span>
+                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+              </div>
+              <Link href="/shop" className="prod-add-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Shop Now
+              </Link>
+            </div>
+          </div>
+
+          <div className="prod-card">
+            <div className="prod-img">
+              <img src="https://rlrcugmcgkbuhridzryj.supabase.co/storage/v1/object/public/hunkx_storage_sb/products/womens-streetwear-white.jpeg" alt="Star Pattern Jersey" />
+            </div>
+            <div className="prod-info">
+              <h4>'22' Star Pattern Jersey</h4>
+              <p style={{fontSize: '0.8rem', color: 'gray', marginBottom: '10px', height: '40px'}}>White and navy oversized jersey for chic urban vibes.</p>
+              <div className="prod-price-row">
+                <span className="prod-price">₹1899</span>
+                <button className="prod-heart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+              </div>
+              <Link href="/shop" className="prod-add-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'8px'}}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Shop Now
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ABOUT */}
-      <section id="about" ref={addToRefs}>
-        <div className="about">
-          <div className="about-content">
-            <span className="section-label">The Brand</span>
-            <h2 className="section-title">Style that <span>commands</span> the street.</h2>
-            <p>Hunkx is a unisex clothing label born in Ghaziabad — for those who treat every outfit like a statement. Bold cuts. Confident silhouettes. A wardrobe built for people who don't blend in.</p>
-            <p>From acid-washed denim to sharp seasonal drops, every piece is curated to help you drip hard and dress sharp.</p>
-          </div>
-          <div className="about-visual">
-            <div className="visual-inner">
-              <div className="hanger-icon">⌒</div>
-              <div className="visual-text">DRIP HARD<br/>DRESS SHARP</div>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* GALLERY */}
       <section id="gallery" ref={addToRefs}>
@@ -215,13 +247,8 @@ export default function Home() {
             </div>
             <a href="https://maps.app.goo.gl/rHiqQWMH3msZEr2b8" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ marginTop: '10px', borderRadius: '9999px' }}>Get Directions</a>
           </div>
-          <div className="map-card">
-            <div></div>
-            <div className="map-pin">⚲</div>
-            <div className="map-text">
-              <h3>FLAGSHIP STORE</h3>
-              <p>Opp. Vida Gym<br/>Sahibabad, Ghaziabad</p>
-            </div>
+          <div className="map-card" style={{ padding: 0, overflow: 'hidden', border: 'none', background: 'transparent' }}>
+            <img src="https://rlrcugmcgkbuhridzryj.supabase.co/storage/v1/object/public/hunkx_storage_sb/products/map-screenshot.png" alt="Google Map Location" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
           </div>
         </div>
       </section>
