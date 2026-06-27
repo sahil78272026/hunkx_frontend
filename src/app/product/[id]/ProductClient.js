@@ -24,7 +24,6 @@ export default function ProductClient({ product }) {
     
     setTimeout(() => {
       setIsAdding(false);
-      router.push('/cart');
     }, 600);
   };
 
